@@ -19,7 +19,7 @@ function CatalogoGrafica() {
     <>
       <div className="text-white absolute w-full flex justify-center z-20">
         <Link
-          to={"/catalogo-grafica"}
+          to={"/catalogo-general"}
           className="uppercase text-gray-800 font-bold bg-yellow-400 p-3 lg:p-5 rounded-b-lg"
         >
           Catalogo General

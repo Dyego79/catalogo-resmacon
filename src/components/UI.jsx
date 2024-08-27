@@ -1,23 +1,44 @@
 import { atom, useAtom } from "jotai";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const pictures = [
-  "DSC00680",
-  "DSC00933",
-  "DSC00966",
-  "DSC00983",
-  "DSC01011",
-  "DSC01040",
-  "DSC01064",
-  "DSC01071",
-  "DSC01103",
-  "DSC01145",
-  "DSC01420",
-  "DSC01461",
-  "DSC01489",
-  "DSC02031",
-  "DSC02064",
-  "DSC02069",
+  "Catalogo-Resmacon-2024_02",
+  "Catalogo-Resmacon-2024_03",
+  "Catalogo-Resmacon-2024_04",
+  "Catalogo-Resmacon-2024_05",
+  "Catalogo-Resmacon-2024_06",
+  "Catalogo-Resmacon-2024_07",
+  "Catalogo-Resmacon-2024_08",
+  "Catalogo-Resmacon-2024_09",
+  "Catalogo-Resmacon-2024_10",
+  "Catalogo-Resmacon-2024_11",
+  "Catalogo-Resmacon-2024_12",
+  "Catalogo-Resmacon-2024_13",
+  "Catalogo-Resmacon-2024_14",
+  "Catalogo-Resmacon-2024_15",
+  "Catalogo-Resmacon-2024_16",
+  "Catalogo-Resmacon-2024_17",
+  "Catalogo-Resmacon-2024_18",
+  "Catalogo-Resmacon-2024_19",
+  "Catalogo-Resmacon-2024_20",
+  "Catalogo-Resmacon-2024_21",
+  "Catalogo-Resmacon-2024_22",
+  "Catalogo-Resmacon-2024_23",
+  "Catalogo-Resmacon-2024_24",
+  "Catalogo-Resmacon-2024_25",
+  "Catalogo-Resmacon-2024_26",
+  "Catalogo-Resmacon-2024_27",
+  "Catalogo-Resmacon-2024_28",
+  "Catalogo-Resmacon-2024_29",
+  "Catalogo-Resmacon-2024_30",
+  "Catalogo-Resmacon-2024_31",
+  "Catalogo-Resmacon-2024_32",
+  "Catalogo-Resmacon-2024_33",
+  "Catalogo-Resmacon-2024_34",
+  "Catalogo-Resmacon-2024_35",
+  "Catalogo-Resmacon-2024_36",
+  "Catalogo-Resmacon-2024_37",
 ];
 
 export const pageAtom = atom(0);
@@ -43,104 +64,68 @@ export const UI = () => {
   const [page, setPage] = useAtom(pageAtom);
 
   useEffect(() => {
-    const audio = new Audio("/audios/page-flip-01a.mp3");
-    audio.play();
+    const playAudio = () => {
+      const audio = new Audio("/audios/page-flip-01a.mp3");
+      audio.play().catch((error) => {
+        console.log("Audio play failed:", error);
+      });
+    };
+
+    window.addEventListener("click", playAudio, { once: true });
+
+    return () => {
+      window.removeEventListener("click", playAudio);
+    };
   }, [page]);
+
+  // Solo mostrar las páginas de carátulas
+  const caratulasIndexes = [1, 6, 8, 11, 14, 15, 17];
+  const pageNames = {
+    1: "Resmas",
+    6: "Rollos",
+    8: "Higiene",
+    11: "Limpieza",
+    14: "Embalaje",
+    15: "Bolsas",
+    17: "Sobres ",
+  };
+  const filteredPages = pages.filter((_, index) =>
+    caratulasIndexes.includes(index)
+  );
 
   return (
     <>
-      <main className=" pointer-events-none select-none z-10 fixed  inset-0  flex justify-between flex-col">
-        <a
-          className="pointer-events-auto mt-10 ml-10"
-          href="https://lessons.wawasensei.dev/courses/react-three-fiber"
-        >
-          <img className="w-20" src="/images/wawasensei-white.png" />
-        </a>
-        <div className="w-full overflow-auto pointer-events-auto flex justify-center">
-          <div className="overflow-auto flex items-center gap-4 max-w-full p-10">
-            {[...pages].map((_, index) => (
+      <main className="pointer-events-none z-10 fixed  inset-0  flex justify-between flex-col">
+        <div className="w-full overflow-auto pointer-events-auto flex justify-center absolute bottom-0">
+          <div className="overflow-auto flex items-center gap-2 max-w-full p-2 lg:p-10">
+            {filteredPages.map((_, index) => (
               <button
                 key={index}
-                className={`border-transparent hover:border-white transition-all duration-300  px-4 py-3 rounded-full  text-lg uppercase shrink-0 border ${
-                  index === page
+                className={`border-transparent hover:border-white transition-all duration-300 px-3 py-1 rounded-full text-lg uppercase shrink-0 border ${
+                  caratulasIndexes[index] === page
                     ? "bg-white/90 text-black"
                     : "bg-black/30 text-white"
                 }`}
-                onClick={() => setPage(index)}
+                onClick={() => setPage(caratulasIndexes[index])}
               >
-                {index === 0 ? "Cover" : `Page ${index}`}
+                {pageNames[caratulasIndexes[index]]}
+                {/*    {pageNames[caratulasIndexes[index]] ||
+                  `Carátula ${caratulasIndexes[index]}`} */}
               </button>
             ))}
-            <button
-              className={`border-transparent hover:border-white transition-all duration-300  px-4 py-3 rounded-full  text-lg uppercase shrink-0 border ${
+            {/* <button
+              className={`border-transparent hover:border-white transition-all duration-300 px-4 py-3 rounded-full text-lg uppercase shrink-0 border ${
                 page === pages.length
                   ? "bg-white/90 text-black"
                   : "bg-black/30 text-white"
               }`}
               onClick={() => setPage(pages.length)}
             >
-              Back Cover
-            </button>
+              Contra Tapa
+            </button> */}
           </div>
         </div>
       </main>
-
-      <div className="fixed inset-0 flex items-center -rotate-2 select-none">
-        <div className="relative">
-          <div className="bg-white/0  animate-horizontal-scroll flex items-center gap-8 w-max px-8">
-            <h1 className="shrink-0 text-white text-10xl font-black ">
-              Wawa Sensei
-            </h1>
-            <h2 className="shrink-0 text-white text-8xl italic font-light">
-              React Three Fiber
-            </h2>
-            <h2 className="shrink-0 text-white text-12xl font-bold">
-              Three.js
-            </h2>
-            <h2 className="shrink-0 text-transparent text-12xl font-bold italic outline-text">
-              Ultimate Guide
-            </h2>
-            <h2 className="shrink-0 text-white text-9xl font-medium">
-              Tutorials
-            </h2>
-            <h2 className="shrink-0 text-white text-9xl font-extralight italic">
-              Learn
-            </h2>
-            <h2 className="shrink-0 text-white text-13xl font-bold">
-              Practice
-            </h2>
-            <h2 className="shrink-0 text-transparent text-13xl font-bold outline-text italic">
-              Creative
-            </h2>
-          </div>
-          <div className="absolute top-0 left-0 bg-white/0 animate-horizontal-scroll-2 flex items-center gap-8 px-8 w-max">
-            <h1 className="shrink-0 text-white text-10xl font-black ">
-              Wawa Sensei
-            </h1>
-            <h2 className="shrink-0 text-white text-8xl italic font-light">
-              React Three Fiber
-            </h2>
-            <h2 className="shrink-0 text-white text-12xl font-bold">
-              Three.js
-            </h2>
-            <h2 className="shrink-0 text-transparent text-12xl font-bold italic outline-text">
-              Ultimate Guide
-            </h2>
-            <h2 className="shrink-0 text-white text-9xl font-medium">
-              Tutorials
-            </h2>
-            <h2 className="shrink-0 text-white text-9xl font-extralight italic">
-              Learn
-            </h2>
-            <h2 className="shrink-0 text-white text-13xl font-bold">
-              Practice
-            </h2>
-            <h2 className="shrink-0 text-transparent text-13xl font-bold outline-text italic">
-              Creative
-            </h2>
-          </div>
-        </div>
-      </div>
     </>
   );
 };

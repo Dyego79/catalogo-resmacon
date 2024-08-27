@@ -1,21 +1,39 @@
-import { Loader } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import { Suspense } from "react";
-import { Experience } from "./components/Experience";
 import { UI } from "./components/UI";
+import { useRef, Suspense } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import CatalogoGeneral from "./components/Catalogo-general";
+import CatalogoGrafica from "./components/Catalogo-grafica";
+import Inicio from "./components/Inicio";
+import Header from "./components/Header";
+import WhatsAppBtn from "./components/WhatsAppBtn";
+import { Loader } from "@react-three/drei";
 
 function App() {
+  const orbitControlsRef = useRef();
+  const resetControls = () => {
+    if (orbitControlsRef.current) {
+      orbitControlsRef.current.reset(); // Resetea los controles a su estado inicial
+    }
+  };
   return (
     <>
-      <UI />
-      <Loader />
-      <Canvas shadows camera={{ position: [-0.5, 1, 4], fov: 45 }}>
-        <group position-y={0}>
-          <Suspense fallback={null}>
-            <Experience />
-          </Suspense>
-        </group>
-      </Canvas>
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Inicio />} />
+          <Route
+            path="/catalogo-general"
+            element={<CatalogoGeneral />}
+            loader={<Loader />}
+          />
+          <Route
+            path="/catalogo-grafica"
+            element={<CatalogoGrafica />}
+            loader={<Loader />}
+          />
+        </Routes>
+      </BrowserRouter>
+      <WhatsAppBtn />
     </>
   );
 }
